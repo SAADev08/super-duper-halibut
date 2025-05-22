@@ -9,7 +9,7 @@ export default function CardMensagem({ id_mensagem, mensagemSala: msg }: any) {
 
     const mensagem = msg || mensagemHook;
 
-    var tzoffset = new Date().getTimezoneOffset() * 60000;
+    const tzoffset = new Date().getTimezoneOffset() * 60000;
 
     useEffect(() => {
         if (mensagem) {

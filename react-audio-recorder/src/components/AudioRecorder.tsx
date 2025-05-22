@@ -80,7 +80,7 @@ export default function AudioRecorder() {
     const SILENCE_THRESHOLD = 45; // AJUSTAR VALOR PARA SILÊNCIO (conforme barulho ambiente)
     const SILENCE_DURATION_MS = 2000; // 2 segundos
 
-    var tzoffset = new Date().getTimezoneOffset() * 60000;
+    const tzoffset = new Date().getTimezoneOffset() * 60000;
     // --- Funções de Limpeza ---
 
     const stopMediaTracks = useCallback((stream: MediaStream | null) => {
@@ -396,7 +396,7 @@ export default function AudioRecorder() {
             };
 
             mediaRecorder.onstop = () => {
-                let data = new Date(new Date().getTime() - tzoffset)
+                const data = new Date(new Date().getTime() - tzoffset)
                     .toISOString()
                     .split(".")[0];
 
@@ -416,7 +416,7 @@ export default function AudioRecorder() {
                         timestamp: new Date(new Date().getTime()),
                     };
                     setAudioSegments(prev => [...prev, newSegment]);
-                    let infos = {
+                    const infos = {
                         sala: salaAtiva?.id_sala,
                         audio: blob,
                     };
@@ -814,7 +814,7 @@ export default function AudioRecorder() {
 
     const handleSendAudio = async (infos: any) => {
         console.log(infos);
-        let data = new Date(new Date().getTime() - tzoffset)
+        const data = new Date(new Date().getTime() - tzoffset)
             .toISOString()
             .split(".")[0];
         const formData = new FormData();
@@ -843,7 +843,7 @@ export default function AudioRecorder() {
             console.error("Pergunta vazia. Não enviando para a API.");
             return;
         }
-        let obj = {
+        const obj = {
             pergunta: query,
         };
         try {
@@ -869,7 +869,7 @@ export default function AudioRecorder() {
     };
 
     const handleFinalizar = (sala: any) => {
-        let data = new Date(new Date().getTime() - tzoffset)
+        const data = new Date(new Date().getTime() - tzoffset)
             .toISOString()
             .split(".")[0];
 
@@ -880,7 +880,7 @@ export default function AudioRecorder() {
             },
             {
                 onSuccess: () => {
-                    setCurrentPage("home");
+                    setCurrentPage("salas");
                 },
             }
         );
