@@ -1,11 +1,12 @@
 import { useCriarSala, useHistoricoSalas } from "../hooks/useSalas";
-import { ISala, useMeetingStore } from "../store/meetingStore";
+import { useMeetingStore } from "../store/meetingStore";
 import { useEffect, useState } from "react";
 import ModalCriarSala from "../components/ModalCriarSala";
 import { useAuthStore } from "../store/authStore";
 import { useUIStore } from "../store/uiStore";
 import TabelaSalas from "../components/TabelaSalas";
 import { PaginationState } from "@tanstack/react-table";
+import { useAllAgentes } from "../hooks/useAgentes";
 
 export function MeetingPage() {
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -18,20 +19,21 @@ export function MeetingPage() {
     const { data: salas, isLoading, isError } = useHistoricoSalas(pagination);
     const { mutate: criarSala } = useCriarSala();
     const setSalaAtiva = useMeetingStore(state => state.setSalaAtiva);
+    const { data: agentes } = useAllAgentes();
+
     const { setCurrentPage } = useUIStore();
 
-    var tzoffset = new Date().getTimezoneOffset() * 60000;
+    const tzoffset = new Date().getTimezoneOffset() * 60000;
 
-    const handleNovaReuniao = (descricao: string) => {
-        let data = new Date(new Date().getTime() - tzoffset)
+    const handleNovaReuniao = (descricao: string, agente_temp: string) => {
+        const data = new Date(new Date().getTime() - tzoffset)
             .toISOString()
             .split(".")[0];
-        const userId = useAuthStore.getState().usuario?.id_pessoa;
         criarSala(
             {
                 data_hora_in: data,
                 descricao,
-                pessoa_temp: userId,
+                agente_temp,
             },
             {
                 onSuccess: novaSala => {
@@ -41,10 +43,6 @@ export function MeetingPage() {
             }
         );
     };
-
-    useEffect(() => {
-        console.log(useAuthStore.getState().usuario);
-    });
 
     useEffect(() => {
         if (salas !== undefined) {
@@ -99,6 +97,7 @@ export function MeetingPage() {
                         setPagination={setPagination}
                         isLoading={isLoading}
                         isError={isError}
+                        agentes={agentes}
                     />
                 ) : (
                     <div className="p-4 text-center">
@@ -109,6 +108,7 @@ export function MeetingPage() {
                 )}
             </div>
             <ModalCriarSala
+                agents={agentes}
                 isOpen={isModalOpen}
                 onClose={() => setIsModalOpen(false)}
                 onSubmit={handleNovaReuniao}

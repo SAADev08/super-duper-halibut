@@ -29,6 +29,7 @@ export interface TabelaProps {
     isError: boolean;
     pagination: PaginationState;
     setPagination: React.Dispatch<React.SetStateAction<PaginationState>>;
+    agentes?: any;
 }
 // const ExpandedRowContent = ({ info }: any) => {
 //     return (
@@ -71,7 +72,8 @@ export interface TabelaProps {
 // };
 
 export default function TabelaSalas(props: TabelaProps) {
-    const { data, pagination, setPagination, isError, isLoading } = props;
+    const { data, pagination, setPagination, isError, isLoading, agentes } =
+        props;
     const [totalPages, setTotalPages] = useState(0);
 
     const { setCurrentPage } = useUIStore();
@@ -126,8 +128,8 @@ export default function TabelaSalas(props: TabelaProps) {
             accessorKey: "data_hora_in",
             header: "Data Inicial",
             cell: (info: any) => {
-                let newDate = info.getValue().split("T")[0];
-                let arrDate = newDate.split("-");
+                const newDate = info.getValue().split("T")[0];
+                const arrDate = newDate.split("-");
                 return (
                     arrDate[2] +
                     "/" +
@@ -146,8 +148,8 @@ export default function TabelaSalas(props: TabelaProps) {
                 if (info.getValue() === null || info.getValue() === undefined) {
                     return "Sala em Andamento";
                 } else {
-                    let newDate = info.getValue().split("T")[0];
-                    let arrDate = newDate.split("-");
+                    const newDate = info.getValue().split("T")[0];
+                    const arrDate = newDate.split("-");
 
                     return (
                         arrDate[2] +
@@ -165,6 +167,24 @@ export default function TabelaSalas(props: TabelaProps) {
             accessorKey: "descricao",
             header: "Descrição",
             cell: (info: any) => info.getValue(),
+        },
+        {
+            accessorKey: "agente_temp",
+            header: "Agente",
+            cell: (info: any) => {
+                if (agentes === undefined) {
+                    return "Agente não encontrado";
+                }
+                const agente = agentes.dados.find(
+                    (agente: any) =>
+                        agente.id_agente === info.getValue().toString()
+                );
+                if (agente) {
+                    return agente.nome;
+                } else {
+                    return "Agente não encontrado";
+                }
+            },
         },
         {
             accessorKey: "visualizar",
@@ -206,6 +226,10 @@ export default function TabelaSalas(props: TabelaProps) {
         manualPagination: true,
     });
 
+    useEffect(() => {
+        setTotalPages(Math.ceil(data.total_registros / pagination.pageSize));
+    }, [pagination, data.total_registros]);
+
     if (isLoading) {
         return (
             <div className="w-full flex justify-center py-8">
@@ -223,10 +247,6 @@ export default function TabelaSalas(props: TabelaProps) {
             </div>
         );
     }
-
-    useEffect(() => {
-        setTotalPages(Math.ceil(data.total_registros / pagination.pageSize));
-    }, [pagination, data.total_registros]);
 
     return (
         <>

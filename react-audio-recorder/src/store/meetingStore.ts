@@ -6,7 +6,8 @@ export interface ISalaModule {
     data_hora_in: string;
     data_hora_fin?: string;
     descricao: string;
-    pessoa_temp?: string;
+    conta_temp?: string;
+    agente_temp?: string;
 }
 export interface ISala {
     dados: ISalaModule[];
