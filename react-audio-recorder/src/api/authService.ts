@@ -5,7 +5,7 @@ interface LoginRequest {
 
 interface LoginResponse {
     token: string;
-    id_pessoa: string;
+    id_conta: string;
     nome: string;
 }
 
