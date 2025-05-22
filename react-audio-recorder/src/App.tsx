@@ -3,9 +3,11 @@ import { MeetingPage } from "./pages/MeetingPage";
 import { LoginPage } from "./pages/LoginPage";
 import { useAuthStore } from "./store/authStore";
 import { useUIStore } from "./store/uiStore";
-import { List } from "@phosphor-icons/react";
 import { HomePage } from "./pages/HomePage";
 import { AgentsPage } from "./pages/AgentsPage";
+import { ChatPage } from "./pages/ChatPage";
+import { KnowledgeBasePage } from "./pages/KnowledgeBasePage";
+import { BaseDeConhecimento } from "./components/BaseDeConhecimento";
 // Se estiver usando Tailwind, importe o CSS aqui ou no main.tsx
 // import './index.css';
 
@@ -50,6 +52,11 @@ function App() {
                 {currentPage === "salas" && <MeetingPage />}
                 {currentPage === "gravar" && <AudioRecorder />}
                 {currentPage === "agentes" && <AgentsPage />}
+                {currentPage === "chat" && <ChatPage />}
+                {currentPage === "base_conhecimento" && <KnowledgeBasePage />}
+                {currentPage === "criar_base_conhecimento" && (
+                    <BaseDeConhecimento />
+                )}
             </main>
         </div>
     );
